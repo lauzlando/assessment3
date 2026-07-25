@@ -21,7 +21,7 @@ def get_weather(latitude, longitude):
     """    
     params = {
         "latitude": latitude,
-        "longitude": latitude,
+        "longitude": longitude,
         "current_weather": True,
         "temperature_unit": "fahrenheit",    
         "timezone": "auto"
