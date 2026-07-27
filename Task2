@@ -1,0 +1,103 @@
+import json
+from datetime import datetime,timezone
+from weather import get_weather  
+
+def fetch_all(cities):
+    """ Doc String placeholder"""
+
+    results=[]
+
+    for city in cities:
+        weather_data=get_weather(city[lat],city[lon])
+        timestamp=datetime.now(timezone,utc).isoformat()
+
+        entry={
+            "city":city["name"],
+            "fetched_at": timestamp,
+            "weather": weather_data
+
+        }
+
+        results.append(entry)
+
+    return results
+
+def update_log(log_path, new_results):
+
+    try:
+        with open (log_path, "r") as file:
+            log = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+    #start fresh if doesnt exist
+
+        log = []
+    
+    #add new resultss to log
+    log.extend(new_results)
+
+    #save the updatedlog back to disk
+    with open(log_path,"w") as file:
+        json.dump(log,file,indent=2)
+
+def summarise_log(log_path):
+# doc string - 
+
+    try:
+        with open(log_path, "r") as file:
+            log=json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        log=[]
+
+    #if log is empty return empty Stats 
+    if not log:
+        return {
+            "total records": 0,
+            "cities_tracked":[],
+            "latest_fetch": None,
+            "avg_temperature": None
+        }
+
+        total_records = len(log)
+
+    #unique city names sored
+    cities_tracked = sorted({entry["city"]} for entry in log )
+
+    #most recent time stamp
+    latest_fetch=max(entry["fetched_at"] for entry in log)
+
+    #average temperature
+    temps=[entry["weather"]["temperature"]for entry in log]
+    avg_temperature=round(sum(temps) / len(temps), 2)
+
+    return{
+        "total_records": total_records,
+        "cities_tracked": cities_tracked,
+        "latest_fetch": latest_fetch,
+        "avg_temperature": avg_temperature
+    }
+
+def test_collector():
+
+    sample_cities = [ 
+        {"name": "Sydney",    "lat": -33.87, "lon": 151.21}, 
+        {"name": "Melbourne", "lat": -37.81, "lon": 144.96}, 
+    ]
+
+    results=fetch_all(sample_cities)
+    print("Fetch results:", results)
+
+    #test to update log
+    update_log("weather_log_test.json", results)
+    print("Log updated.")
+
+    #summarise
+    summary=summarise_log("weather_log_test.json")
+    print("Summary:", summary)
+
+    from collector import fetch_all_cities
+
+    cities = [{"name": "Sydney", "lat": -33.87, "lon": 151.21}]
+
+    print(fetch_all_cities(cities))
+
+
