@@ -4,7 +4,7 @@ from weather import get_weather
 
 def fetch_all_cities(cities):
     """ 
-    Fetch weather for a list of city dictionaries. 
+    Fetch weather for a list of city dictionaries.  
 
     Each city dict must contain
     - name: City name as a string
