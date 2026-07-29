@@ -7,7 +7,7 @@ def generate_report(log_path, output_path):
     """
 
     with open(log_path, "r") as f:
-        data=json.load(f)
+        data=json.load(f) 
 
     total_records = len(data)
     cities = sorted({entry["city"] for entry in data})
