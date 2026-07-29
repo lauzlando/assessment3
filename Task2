@@ -9,7 +9,7 @@ def fetch_all_cities(cities):
     Each city dict must contain
     - name: City name as a string
     - lat: latitude as a float
-    - lon: longitude as a float
+    - lon: longitude as a float 
 
     Returns:
     A list of dictionaries, each shaped as:   
