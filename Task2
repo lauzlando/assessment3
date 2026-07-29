@@ -81,7 +81,7 @@ def summarise_log(log_path):
         {
             "total_records": int,
             "cities_tracked": sorted list of unique values,
-            "latest_fetch": ISO timestamp string,
+            "latest_fetch": ISO timestamp string, 
 
             "avg_temperature": float rounded to 2 decimals
         }
