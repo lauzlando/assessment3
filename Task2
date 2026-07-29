@@ -65,7 +65,7 @@ def update_log(log_path, new_results):
     except (FileNotFoundError, json.JSONDecodeError):
         existing_log = []
     
-    #add new resultss to log
+    #add new resultss to log 
     for entry in new_results:
         existing_log.append(entry)
 
