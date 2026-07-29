@@ -1,0 +1,100 @@
+import json
+from datetime import datetime
+
+def generate_report(log_path, output_path):
+    """
+    Generates a HTML weather report from the task 2 log file
+    """
+
+    with open(log_path, "r") as f:
+        data=json.load(f)
+
+    total_records = len(data)
+    cities = sorted({entry["city"] for entry in data})
+    timestamps = [entry["fetched_at"] for entry in data]
+    date_range = f"{min(timestamps)} -> {max(timestamps)}"
+
+    weather_description = {
+        0: "Clear sky",
+        1: "Mainly clear",
+        2: "Partly cloudy",
+        3: "Overcast",
+        45: "Fog",
+        48: "Depositing rime fog",
+        51: "Light drizzle",
+        53: "Moderate drizzle",
+        55: "Dense drizzle",
+        61: "Slight rain",
+        63: "Moderate rain",
+        65: "Heavy rain",
+        80: "Rain showers (slight)",
+        81: "Rain showers (moderate)",
+        82: "Rain showers (violent)",
+        95: "Thunderstorm",
+        96: "Thunderstorm with slight hail",
+        99: "Thunderstorm with heavy hail"
+    }
+
+    #Build HTML
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather Report</title>
+<style>
+    body {{ font-family: Arial;}}
+    table {{border-collapse: collapse; width: 100%:}}
+    th, td {{border: 1px solid #ccc; padding: 8px;}}
+    th {{ background-colour: #eee;}}
+</style>
+</head>
+<body>
+
+<h1>Weather Report - Generated {timestamps}</h1>
+
+<h2> Summary</h2>
+<p><strong>Total records:</strong> {total_records}</p>
+<p><strong>Cities tracked:</strong> {",".join(cities)}</p>
+<p><strong>Date range:</strong> {date_range}</p>
+
+<h2>Log Entries</h2>
+<table>
+    <tr>
+        <th>City</th>
+        <th>Timestamp</th>
+        <th>Temperature (°C)</th>
+        <th>Windspeed (km/h)</th>
+        <th>Description</th)
+    <tr>
+"""
+    
+    #Add each log entry as a table row 
+    for entry in data:
+        weather = entry.get("weather", None)
+        #read weather code from inside the "weather" dictionary
+        code = weather.get("weathercode", None)
+        desc = weather_description.get(code, "N/A")
+
+        html += f"""
+    <tr>
+        <td>{entry['city']}</td>
+        <td>{entry['fetched_at']}</td>
+        <td>{weather.get('temperature', 'N/A)')}</td>
+        <td>{weather.get('windspeed', 'N/A')}</td>
+        <td>{desc}</td>
+    <tr>
+"""
+
+    html += """
+</table>
+</body>
+</html>
+"""
+
+    with open(output_path, "w") as f:
+        f.write(html)
+
+        print(f"Report generated: {output_path}")
+
+generate_report("weather_log.json", "weather_report.html")
