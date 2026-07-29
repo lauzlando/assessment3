@@ -12,7 +12,7 @@ def fetch_all_cities(cities):
     - lon: longitude as a float
 
     Returns:
-    A list of dictionaries, each shaped as: 
+    A list of dictionaries, each shaped as:  
 
     { 
     "city": "Sydney", 
