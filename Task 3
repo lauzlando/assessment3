@@ -3,7 +3,7 @@ from datetime import datetime
 
 def generate_report(log_path, output_path):
     """
-    Generates a HTML weather report from the task 2 log file
+    Generates a HTML weather report from the task 2 log file 
     """
 
     with open(log_path, "r") as f: 
